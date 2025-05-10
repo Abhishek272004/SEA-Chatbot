@@ -1,0 +1,194 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placements - SEA College of Engineering & Technology</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-blue-800 text-white fixed w-full z-10 top-0 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <a href="index.html" class="flex-shrink-0 flex items-center">
+                        <img class="h-8 w-auto" src="https://via.placeholder.com/40" alt="SEA College Logo">
+                        <span class="ml-2 text-xl font-bold">SEA College</span>
+                    </a>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                    <a href="index.html" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Home</a>
+                    <a href="about.html" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">About</a>
+                    <a href="courses.html" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Courses</a>
+                    <a href="placements.html" class="px-3 py-2 rounded-md text-sm font-medium bg-blue-700">Placements</a>
+                    <a href="faculty.html" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Faculty</a>
+                    <a href="contact.html" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Contact</a>
+                </div>
+                <div class="sm:hidden flex items-center">
+                    <button id="menu-toggle" class="text-white focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden sm:hidden bg-blue-800">
+            <a href="index.html" class="block px-4 py-2 text-sm hover:bg-blue-700">Home</a>
+            <a href="about.html" class="block px-4 py-2 text-sm hover:bg-blue-700">About</a>
+            <a href="courses.html" class="block px-4 py-2 text-sm hover:bg-blue-700">Courses</a>
+            <a href="placements.html" class="block px-4 py-2 text-sm hover:bg-blue-700">Placements</a>
+            <a href="faculty.html" class="block px-4 py-2 text-sm hover:bg-blue-700">Faculty</a>
+            <a href="contact.html" class="block px-4 py-2 text-sm hover:bg-blue-700">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Placements Section -->
+    <section class="py-16 mt-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl font-bold text-center text-gray-800">Placements at SEA College</h2>
+            <p class="mt-4 text-center text-gray-600">Our robust placement cell ensures students are industry-ready, with an 85%+ placement rate for eligible candidates.</p>
+            <div class="mt-12">
+                <h3 class="text-2xl font-semibold text-blue-600">Top Recruiters</h3>
+                <div class="mt-8 flex flex-wrap justify-center gap-8">
+                    <img src="https://via.placeholder.com/150x50?text=TCS" alt="TCS" class="h-12">
+                    <img src="https://via.placeholder.com/150x50?text=Infosys" alt="Infosys" class="h-12">
+                    <img src="https://via.placeholder.com/150x50?text=Wipro" alt="Wipro" class="h-12">
+                    <img src="https://via.placeholder.com/150x50?text=Accenture" alt="Accenture" class="h-12">
+                    <img src="https://via.placeholder.com/150x50?text=Capgemini" alt="Capgemini" class="h-12">
+                </div>
+            </div>
+            <div class="mt-12">
+                <h3 class="text-2xl font-semibold text-blue-600">Placement Highlights</h3>
+                <ul class="mt-4 list-disc list-inside text-gray-600">
+                    <li>Over 500 students placed in 2024 across various sectors.</li>
+                    <li>Highest package: ₹15 LPA offered by a leading IT firm.</li>
+                    <li>Internship programs with top companies for practical exposure.</li>
+                </ul>
+            </div>
+            <div class="mt-12">
+                <h3 class="text-2xl font-semibold text-blue-600">Success Stories</h3>
+                <div class="mt-8 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+                    <div class="bg-gray-100 p-6 rounded-lg shadow-md card">
+                        <img src="https://via.placeholder.com/300x200?text=Alumni" alt="Alumni" class="w-full h-40 object-cover rounded-t-lg">
+                        <p class="mt-4 text-gray-600">"SEA's placement training helped me secure a role at TCS!"</p>
+                        <p class="mt-2 font-semibold text-blue-600">Anita Sharma, B.E. CSE 2023</p>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-lg shadow-md card">
+                        <img src="https://via.placeholder.com/300x200?text=Alumni" alt="Alumni" class="w-full h-40 object-cover rounded-t-lg">
+                        <p class="mt-4 text-gray-600">"The mock interviews prepared me for Accenture's hiring process."</p>
+                        <p class="mt-2 font-semibold text-blue-600">Vikram Patel, B.E. ECE 2022</p>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-lg shadow-md card">
+                        <img src="https://via.placeholder.com/300x200?text=Alumni" alt="Alumni" class="w-full h-40 object-cover rounded-t-lg">
+                        <p class="mt-4 text-gray-600">"Internships through SEA led to my full-time role at Wipro."</p>
+                        <p class="mt-2 font-semibold text-blue-600">Priya Menon, B.E. Mech 2024</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chatbot Toggle Button -->
+    <button id="chatbot-toggle" class="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 focus:outline-none z-20">
+        <svg id="chatbot-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
+        </svg>
+    </button>
+
+    <!-- Chatbot Container -->
+    <div id="chatbot-container" class="fixed top-0 right-0 h-full w-80 md:w-96 bg-white shadow-xl transform translate-x-full transition-transform duration-300 z-30 flex flex-col">
+        <!-- Chat Header -->
+        <div class="bg-blue-600 text-white p-4 flex justify-between items-center">
+            <h2 class="text-lg font-semibold">SEA College Chatbot</h2>
+            <button id="close-chatbot" class="text-white hover:text-gray-200 focus:outline-none">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+        </div>
+        <!-- Chat Messages -->
+        <div id="chat-messages" class="flex-1 p-4 overflow-y-auto"></div>
+        <!-- Chat Input -->
+        <div class="p-4 border-t">
+            <div class="relative">
+                <input id="chat-input" type="text" class="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Ask about SEA College...">
+                <div id="suggestions" class="absolute w-full bg-white border rounded-lg mt-1 hidden"></div>
+            </div>
+            <div id="suggestion-chips" class="mt-2"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-blue-800 text-white py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid gap-8 md:grid-cols-3">
+                <div>
+                    <h3 class="text-lg font-semibold">SEA College</h3>
+                    <p class="mt-2 text-gray-300">Providing academic excellence since 2000.</p>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold">Quick Links</h3>
+                    <ul class="mt-2 space-y-2">
+                        <li><a href="about.html" class="text-gray-300 hover:text-white">About Us</a></li>
+                        <li><a href="courses.html" class="text-gray-300 hover:text-white">Courses</a></li>
+                        <li><a href="placements.html" class="text-gray-300 hover:text-white">Placements</a></li>
+                        <li><a href="contact.html" class="text-gray-300 hover:text-white">Contact</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 class="text-lg font-semibold">Contact Us</h3>
+                    <p class="mt-2 text-gray-300">Ekta Nagar, Basavanapura, Virgonagar P.O, Bangalore, Karnataka, India</p>
+                    <p class="mt-2 text-gray-300">Email: info@seacet.edu.in</p>
+                    <p class="mt-2 text-gray-300">Phone: +91 123 456 7890</p>
+                </div>
+            </div>
+            <p class="mt-8 text-center text-gray-300">© 2025 SEA College of Engineering & Technology. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

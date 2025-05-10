@@ -1,0 +1,71 @@
+body {
+    background-image: url('https://cache.careers360.mobi/media/presets/720X480/colleges/social-media/media-gallery/3337/2018/10/29/College%20Building%20View%20of%20SEA%20College%20of%20Engineering%20and%20Technology%20Bangalore_Campus-View.jpg');
+    background-attachment: fixed;
+    background-size: cover;
+    background-position: center;
+}
+
+section, footer {
+    background-color: rgba(255, 255, 255, 0.9);
+}
+
+nav {
+    background-color: rgba(30, 64, 175, 0.9);
+}
+
+.card {
+    transition: transform 0.3s ease-in-out;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+}
+
+#chatbot-container {
+    transition: transform 0.3s ease-in-out;
+}
+
+#chatbot-container.open {
+    transform: translateX(0);
+}
+
+.chat-message {
+    max-width: 80%;
+    margin: 10px;
+    padding: 10px;
+    border-radius: 10px;
+}
+
+.user-message {
+    background-color: #3b82f6;
+    color: white;
+    margin-left: auto;
+}
+
+.bot-message {
+    background-color: #e5e7eb;
+    color: black;
+}
+
+.suggestion-chip {
+    display: inline-block;
+    padding: 8px 12px;
+    margin: 4px;
+    background-color: #dbeafe;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.suggestion-chip:hover {
+    background-color: #bfdbfe;
+}
+
+@media (max-width: 640px) {
+    .hero-text {
+        font-size: 2rem;
+    }
+    #chatbot-container {
+        width: 100%;
+    }
+}

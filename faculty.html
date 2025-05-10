@@ -1,0 +1,90 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty - SEA College of Engineering & Technology</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100 font-sans">
+    <!-- Navigation -->
+    <nav class="bg-blue-800 text-white fixed w-full z-10 top-0 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex">
+                    <a href="index.html" class="flex-shrink-0 flex items-center">
+                        <img class="h-8 w-auto" src="https://via.placeholder.com/40" alt="SEA College Logo">
+                        <span class="ml-2 text-xl font-bold">SEA College</span>
+                    </a>
+                </div>
+                <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                    <a href="index.html" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Home</a>
+                    <a href="about.html" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">About</a>
+                    <a href="courses.html" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Courses</a>
+                    <a href="placements.html" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Placements</a>
+                    <a href="faculty.html" class="px-3 py-2 rounded-md text-sm font-medium bg-blue-700">Faculty</a>
+                    <a href="contact.html" class="px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700">Contact</a>
+                </div>
+                <div class="sm:hidden flex items-center">
+                    <button id="menu-toggle" class="text-white focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden sm:hidden bg-blue-800">
+            <a href="index.html" class="block px-4 py-2 text-sm hover:bg-blue-700">Home</a>
+            <a href="about.html" class="block px-4 py-2 text-sm hover:bg-blue-700">About</a>
+            <a href="courses.html" class="block px-4 py-2 text-sm hover:bg-blue-700">Courses</a>
+            <a href="placements.html" class="block px-4 py-2 text-sm hover:bg-blue-700">Placements</a>
+            <a href="faculty.html" class="block px-4 py-2 text-sm hover:bg-blue-700">Faculty</a>
+            <a href="contact.html" class="block px-4 py-2 text-sm hover:bg-blue-700">Contact</a>
+        </div>
+    </nav>
+
+    <!-- Faculty Section -->
+    <section class="py-16 mt-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2
