@@ -137,6 +137,14 @@ const knowledgeBase = {
             </ul>
         `,
         suggestions: ["Research projects", "Industry collaborations", "Publications"]
+    },
+    greetings: {
+        response: `
+            <strong>Hello!</strong><br>
+            Welcome to SEA College of Engineering & Technology!<br>
+            How can I assist you today? You can ask about courses, admissions, facilities, and more.
+        `,
+        suggestions: ["Tell me about the college", "What courses are offered?", "How to apply for admission?"]
     }
 };
 
@@ -242,7 +250,10 @@ function handleQuery(query) {
     let suggestions = [];
 
     // Match query to knowledge base
-    if (normalizedQuery.includes('about') || normalizedQuery.includes('college')) {
+    if (normalizedQuery.includes('hi') || normalizedQuery.includes('hello') || normalizedQuery.includes('hey')) {
+        response = knowledgeBase.greetings.response;
+        suggestions = knowledgeBase.greetings.suggestions;
+    } else if (normalizedQuery.includes('about') || normalizedQuery.includes('college')) {
         response = knowledgeBase.about.response;
         suggestions = knowledgeBase.about.suggestions;
     } else if (normalizedQuery.includes('founder') || normalizedQuery.includes('krishnappa')) {
